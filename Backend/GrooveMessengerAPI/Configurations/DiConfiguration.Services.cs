@@ -1,4 +1,5 @@
 ﻿using GrooveMessengerAPI.Hubs.Utils;
+using GrooveMessengerAPI.PushNotification;
 using GrooveMessengerAPI.Services;
 using GrooveMessengerDAL.Services;
 using GrooveMessengerDAL.Services.Interface;
@@ -22,6 +23,7 @@ namespace GrooveMessengerAPI.Configurations
             services.AddScoped<IUserService, UserService>();
 
             services.AddSingleton(typeof(HubConnectionStorage), typeof(HubConnectionStorage));
+            services.AddSingleton(typeof(NotificationConnectionStorage), typeof(NotificationConnectionStorage));
         }
     }
 }

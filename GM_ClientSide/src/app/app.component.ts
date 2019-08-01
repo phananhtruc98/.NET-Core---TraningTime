@@ -14,6 +14,7 @@ import { FuseTranslationLoaderService } from "@fuse/services/translation-loader.
 import { navigation } from "app/navigation/navigation";
 import { locale as navigationEnglish } from "app/navigation/i18n/en";
 import { locale as navigationTurkish } from "app/navigation/i18n/tr";
+import { NotificationMiddlewareService } from './core/notification-middleware.service';
 
 @Component({
     selector: "app",
@@ -48,6 +49,8 @@ export class AppComponent implements OnInit, OnDestroy {
         private _fuseTranslationLoaderService: FuseTranslationLoaderService,
         private _translateService: TranslateService,
         private _platform: Platform,
+        //Notifications
+        private notificationMiddleware: NotificationMiddlewareService
     ) {
         // Get default navigation
         this.navigation = navigation;
@@ -110,6 +113,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
         // Set the private defaults
         this._unsubscribeAll = new Subject();
+
+
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -120,6 +125,8 @@ export class AppComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
+
+        this.notificationMiddleware.init();
         // Subscribe to config changes
         this._fuseConfigService.config
             .pipe(takeUntil(this._unsubscribeAll))

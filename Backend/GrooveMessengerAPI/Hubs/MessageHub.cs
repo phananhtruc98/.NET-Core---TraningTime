@@ -1,9 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using GrooveMessengerAPI.Constants;
+﻿using GrooveMessengerAPI.Constants;
 using GrooveMessengerAPI.Hubs.Utils;
+using GrooveMessengerAPI.PushNotification;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Threading.Tasks;
 
 namespace GrooveMessengerAPI.Hubs
 {
@@ -11,9 +12,10 @@ namespace GrooveMessengerAPI.Hubs
     public class MessageHub : HubBase<IMessageHubClient>
     {
         public MessageHub(
-            HubConnectionStorage connectionStore
-        ) : base(connectionStore, HubConstant.MessageHubTopic)
-        {        
+            HubConnectionStorage connectionStore,
+             NotificationConnectionStorage notificationConnectionStorage
+        ) : base(connectionStore, notificationConnectionStorage, HubConstant.MessageHubTopic)
+        {
         }
 
         public override Task OnConnectedAsync()

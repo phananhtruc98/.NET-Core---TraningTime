@@ -66,6 +66,7 @@ namespace GrooveMessengerAPI
             RegisterAuth(services);
             RegisterIdentity(services);
             RegisterAutoMapperProfiles(services);
+            RegisterWebpush(services);
 
             DiConfiguration.Register(services);
 

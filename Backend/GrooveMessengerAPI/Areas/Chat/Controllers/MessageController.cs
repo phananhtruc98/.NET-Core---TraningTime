@@ -7,6 +7,7 @@ using GrooveMessengerAPI.Hubs.Utils;
 using GrooveMessengerAPI.Models;
 using GrooveMessengerDAL.Models.CustomModel;
 using GrooveMessengerDAL.Models.Message;
+using GrooveMessengerDAL.Models.Notification;
 using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -85,11 +86,21 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                 foreach (var connectionId in _connectionStore.GetConnections("message", receiverEmail))
                 {
                     await _hubContext.Clients.Client(connectionId).SendMessage(message);
+                    var notificationModel = new NotificationModel()
+                    {
+                        ConvId= createdMessage.ConversationId,
+                        Message = createdMessage.Content,
+                        Title = "New message",
+                        Url = "https//:localhost:4200"
+                    };
+                    await _hubContext.Clients.Client(connectionId).PushNotification(notificationModel);
                 }
                 foreach (var connectionId in _connectionStore.GetConnections("message", CurrentUserName))
                 {
                     await _hubContext.Clients.Client(connectionId).SendMessage(message);
+
                 }
+               
                 return Ok();
             }
             return NotFound();
@@ -137,7 +148,6 @@ namespace GrooveMessengerAPI.Areas.Chat.Controllers
                     var unreadMessageAmount = _mesService.GetUnreadMessages(conversationId, contact.Id);
                     var unreadMessageModel = new UnreadMessageModel
                     { ConversationId = conversationId, Amount = unreadMessageAmount };
-
                     await _hubContext.Clients.Client(connectionId).SendUnreadMessagesAmount(unreadMessageModel);
                 }
 

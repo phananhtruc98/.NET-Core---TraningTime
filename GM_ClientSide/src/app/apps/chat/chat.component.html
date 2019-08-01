@@ -6,7 +6,15 @@
 
     <!-- CENTER -->
     <div class="center">
-
+        <button (click)="toggleSubscription()" class="btn btn-primary"
+            [disabled]="notificationMiddleware.pushNotificationStatus.isInProgress || !notificationMiddleware.pushNotificationStatus.isSupported">
+            <span *ngIf="!notificationMiddleware.pushNotificationStatus.isSupported">Push is NOT supported by this
+                device</span>
+            <span
+                *ngIf="notificationMiddleware.pushNotificationStatus.isSupported && notificationMiddleware.pushNotificationStatus.isSubscribed">Unsubscribe</span>
+            <span
+                *ngIf="notificationMiddleware.pushNotificationStatus.isSupported && !notificationMiddleware.pushNotificationStatus.isSubscribed">Subscribe</span>
+        </button>
         <!-- CONTENT CARD -->
         <div class="content-card">
 
@@ -17,7 +25,7 @@
                                   fuseMatSidenavHelper="chat-left-sidenav" matIsLockedOpen="gt-md"> -->
                 <!---->
                 <mat-sidenav class="sidenav" position="start" opened="true" mode="side"
-                             fuseMatSidenavHelper="chat-left-sidenav" matIsLockedOpen="gt-md">
+                    fuseMatSidenavHelper="chat-left-sidenav" matIsLockedOpen="gt-md">
 
                     <chat-left-sidenav></chat-left-sidenav>
 
@@ -32,7 +40,7 @@
 
                 <!-- RIGHT SIDENAV -->
                 <mat-sidenav class="sidenav" position="end" opened="false" mode="over"
-                             fuseMatSidenavHelper="chat-right-sidenav">
+                    fuseMatSidenavHelper="chat-right-sidenav">
                     <chat-right-sidenav></chat-right-sidenav>
                 </mat-sidenav>
                 <!-- / RIGHT SIDENAV -->

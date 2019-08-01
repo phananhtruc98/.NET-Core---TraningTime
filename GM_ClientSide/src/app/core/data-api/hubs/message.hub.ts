@@ -5,6 +5,8 @@ import { MessageModel } from "./../../../models/message.model";
 import { BehaviorSubject } from "rxjs";
 import { environment } from "environments/environment";
 import { UnreadMessage } from "app/models/UnreadMessage.model";
+import { NotificationModel, NotificationService } from 'app/core/generated';
+import { NotificationMiddlewareService } from 'app/core/notification-middleware.service';
 
 @Injectable({
     providedIn: "root"
@@ -15,8 +17,14 @@ export class MessageHubService {
     removedChatMessage: BehaviorSubject<MessageModel>;
     _hubConnection: signalR.HubConnection;
     unreadMessage: BehaviorSubject<UnreadMessage>;
-
-    constructor(private authService: AuthService) {
+    public pushNotificationStatus = {
+        isSubscribed: true,
+        isSupported: false,
+        isInProgress: false
+    };
+    constructor(private authService: AuthService
+        , private notificationService: NotificationService,
+        private _notificationMiddlewareService: NotificationMiddlewareService, private pushSubcription: PushSubscription) {
 
         this.newChatMessage = new BehaviorSubject(null);
         this.unreadMessage = new BehaviorSubject(null);
@@ -33,6 +41,41 @@ export class MessageHubService {
             (message: UnreadMessage) => {
                 this.unreadMessage.next(message);
             });
+        // this._hubConnection.on("PushNotification",
+        //     (notification: NotificationModel) => {
+        //         //
+        //         this.pushNotificationStatus.isInProgress = true;
+        //         const applicationServerKey = _notificationMiddlewareService.urlB64ToUint8Array(environment.applicationServerPublicKey);
+        //         _notificationMiddlewareService.swRegistration.pushManager.subscribe({
+        //             userVisibleOnly: true,
+        //             applicationServerKey: applicationServerKey
+        //         })
+        //             .then(subscription => {
+        //                 console.log(subscription);
+        //                 console.log(JSON.stringify(subscription));
+        //                 var newSub = JSON.parse(JSON.stringify(subscription));
+        //                 console.log(newSub);
+
+        //                 this.notificationService.broadcast(notification).subscribe(() => {
+        //                 });
+        //                 this.notificationService.subscribe(<PushSubscription>{
+        //                     auth: newSub.keys.auth,
+        //                     p256Dh: newSub.keys.p256dh,
+        //                     endPoint: newSub.endpoint
+        //                 }).subscribe(s => {
+        //                     this.pushNotificationStatus.isSubscribed = true;
+        //                 })
+        //             })
+        //             .catch(err => {
+        //                 console.log('Failed to subscribe the user: ', err);
+        //             })
+        //             .then(() => {
+        //                 this.pushNotificationStatus.isInProgress = false;
+        //             });
+        //         // _notificationMiddlewareService.subscribeUser();
+
+        //         // this.unreadMessage.next(message);
+        //     });
     }
 
     startConnection = () => {
@@ -48,13 +91,13 @@ export class MessageHubService {
     };
 
     addSendMessageToUser(message: MessageModel, toUser: string) {
-        this._hubConnection.invoke("SendMessageToUser", message, toUser).catch(function(err) {
+        this._hubConnection.invoke("SendMessageToUser", message, toUser).catch(function (err) {
             return console.error(err.toString());
         });
     }
 
     addSendRemovedMessageToUser(chatMessageModel: MessageModel, toUser: string) {
-        this._hubConnection.invoke("SendRemovedMessageToUser", chatMessageModel, toUser).catch(function(err) {
+        this._hubConnection.invoke("SendRemovedMessageToUser", chatMessageModel, toUser).catch(function (err) {
             return console.error(err.toString());
         });
     }

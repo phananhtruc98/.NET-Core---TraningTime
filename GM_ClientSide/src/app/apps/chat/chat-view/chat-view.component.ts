@@ -13,6 +13,7 @@ import { IndexMessageModel } from "app/models/indexMessage.model";
 import { UserContactService } from "app/core/account/user-contact.service";
 import { RxSpeechRecognitionService, resultList } from "@kamiazya/ngx-speech-recognition";
 import { ApiMethod, FacebookService } from "ngx-facebook/dist/esm/providers/facebook";
+import { NotificationService, NotificationModel } from 'app/core/generated';
 export class DialogModel {
     id: string;
     who: string;
@@ -42,10 +43,10 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     directiveScroll: FusePerfectScrollbarDirective;
     isOver = false;
     lastClicked: Date = new Date();
-
+    model: NotificationModel = { url: "", title: "", message: "" }
     @ViewChildren("replyInput")
     replyInputField;
-    
+
     @ViewChild("replyForm", { static: false })
     replyForm: NgForm;
 
@@ -99,7 +100,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         private _messageService: MessageService,
         private _userContactService: UserContactService,
         public _rxSpeechRecognitionService: RxSpeechRecognitionService,
-        private fbk: FacebookService
+        private fbk: FacebookService,
+        private notificationService: NotificationService
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
@@ -302,11 +304,14 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         const urlRegex = /^(?!\s*$).+/g;
         const isMatch: boolean = urlRegex.test(this.replyForm.form.value.message);
         if (isMatch) {
-            await this._messageService.addMessage(newMessage).subscribe(success => {
+            this._messageService.addMessage(newMessage).subscribe(success => {
                 console.log("send successfull");
+                console.log(message.message);
+                
             },
                 err => console.log("send fail"));
             //this.dialog.push(message); //Truc: don't need because broadcast to user + contact
+
         }
 
         // Add the message to the chat
@@ -335,6 +340,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 err => console.log(err));
         this.messageInput = ''; //reset
         this.isHide = true;
+
     }
 
     SayHi(contact: any) {
@@ -405,4 +411,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     Say() {
         alert(123);
     }
+
+
 }

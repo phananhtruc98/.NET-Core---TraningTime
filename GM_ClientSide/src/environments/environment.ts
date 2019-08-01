@@ -61,5 +61,6 @@ export const environment = {
         messageUrl: backendUrl + "/messagehub",
         contactUrl: backendUrl + "/contacthub",
         serverTimeoutInSeconds: 120
-    }
+    },
+    applicationServerPublicKey: `BBb7Y3qsetcRZI0T-JOpDZlOP4rco30c1rQGWhrP5hdeLhNI3f9zwTh5KL4nvv0zxTreFFUrXG05U_71xx0HluY`
 };

@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using GrooveMessengerAPI.Areas.Chat.Models;
 using GrooveMessengerDAL.Models.CustomModel;
+using GrooveMessengerDAL.Models.Notification;
 
 namespace GrooveMessengerAPI.Hubs.Utils
 {
@@ -11,6 +12,7 @@ namespace GrooveMessengerAPI.Hubs.Utils
         Task SendEditedMessage(Message message);
         Task SendMessageViewingStatus(string fromUser);
         Task SendUnreadMessagesAmount(UnreadMessageModel unreadMessage);
+        Task PushNotification(NotificationModel notificationModel);
     }
 
     public enum MessageEventTypes

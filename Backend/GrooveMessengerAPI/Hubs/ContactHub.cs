@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using GrooveMessengerAPI.Constants;
 using GrooveMessengerAPI.Hubs.Utils;
+using GrooveMessengerAPI.PushNotification;
 using GrooveMessengerDAL.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -21,6 +22,7 @@ namespace GrooveMessengerAPI.Hubs
 
         public ContactHub(
             HubConnectionStorage connectionStore,
+            NotificationConnectionStorage notificationConnectionStorage,
             IContactService contactService,
             IConversationService conversationService,
             IParticipantService participantService,
@@ -28,7 +30,7 @@ namespace GrooveMessengerAPI.Hubs
             IMessageService messageService,
             IUserService userInfoContact
         )
-            : base(connectionStore, HubConstant.ContactHubTopic)
+            : base(connectionStore, notificationConnectionStorage, HubConstant.ContactHubTopic)
         {
             _contactService = contactService;
             _conversationService = conversationService;

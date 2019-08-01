@@ -46,6 +46,7 @@ import { FacebookModule, FacebookService } from "ngx-facebook";
 import { CloudinaryModule } from "@cloudinary/angular-5.x";
 import * as Cloudinary from "cloudinary-core";
 import { ScrollEventModule } from 'ngx-scroll-event';
+import { NotificationService } from './core/generated';
 @NgModule({
     declarations: [
         AppComponent,
@@ -121,7 +122,8 @@ import { ScrollEventModule } from 'ngx-scroll-event';
             useValue: 1,
         },
         SpeechRecognitionService,
-        RxSpeechRecognitionService
+        RxSpeechRecognitionService,
+        NotificationService
     ],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA,
