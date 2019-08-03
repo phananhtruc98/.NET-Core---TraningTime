@@ -2,11 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using GrooveMessengerAPI.Hubs.Utils;
-using GrooveMessengerAPI.PushNotification;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using WebPush;
 
 namespace GrooveMessengerAPI.Hubs
 {
@@ -14,13 +12,11 @@ namespace GrooveMessengerAPI.Hubs
     public class HubBase<T> : Hub<T> where T : class
     {
         protected HubConnectionStorage ConnectionStore;
-        protected NotificationConnectionStorage NotificationConnectionStorage;
         protected string Topic;
 
 
-        public HubBase(HubConnectionStorage connectionStore, NotificationConnectionStorage notificationConnectionStorage, string topic)
+        public HubBase(HubConnectionStorage connectionStore, string topic)
         {
-            this.NotificationConnectionStorage = notificationConnectionStorage;
             this.ConnectionStore = connectionStore;
             this.Topic = topic;
         }
@@ -33,13 +29,6 @@ namespace GrooveMessengerAPI.Hubs
             {
                 var conn = Context.ConnectionId;
                 ConnectionStore.Add(Topic, name, conn);
-                PushSubscription sub = new PushSubscription()
-                {
-                    //Auth=123,
-                    //Endpoint=123,
-                    //P256DH=
-                };
-                NotificationConnectionStorage.Subscribe(sub);
             }
 
             return base.OnConnectedAsync();
